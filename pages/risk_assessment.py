@@ -4,7 +4,8 @@ import numpy as np
 import pandas as pd
 import pickle
 import os    
-
+import shap
+import matplotlib.pyplot as plt
 
 def load_model():
     """
@@ -17,11 +18,30 @@ def load_model():
 
 model = load_model()
 
+
+# explainer jen jednou po loadovani modelu
+explainer = shap.TreeExplainer(model)
+
 def risk_assessment_page():
+    # write the disclaimer in small font about the site needed to be used by doctors (of data science)
+    st.markdown(
+        """
+        <style>
+        .disclaimer {
+            font-size: 1.2em;
+            color: gray;
+        }
+        </style>
+        <div class="disclaimer">
+            This tool is intended for use by doctors (of data science) only.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
     st.title("Risk Assessment Settings")
 
     # Sidebar controls
-    age = st.slider("Select Age", 20, 90, 55)
+    age = st.slider("Select Age", 20, 90, 45)
     
     def age_normalization(age):
         """
@@ -58,11 +78,16 @@ def risk_assessment_page():
     print(f"Selected age: {age}")
 
     # Number of hospitalizations during primary therapy 
-    st.write("#### Number of Hospitalizations During Primary Therapy")
-    st.write("Select the number of hospitalizations during primary therapy")
+#    st.write("#### Number of Hospitalizations During Primary Therapy")
+    st.markdown(
+        "#### Number of Hospitalizations During Primary Therapy", 
+        help="Select the number of hospitalizations during primary therapy."
+    )
+
+#   st.write("Select the number of hospitalizations during primary therapy")
     
     # Number input
-    pl_pocet_hp = st.number_input("Number of hospitalizations", min_value=0, max_value=50, value=1, step=1)
+    pl_pocet_hp = st.number_input("Number of hospitalizations", min_value=0, max_value=50, value=3, step=1)
     print(f"Selected number of hospitalizations: {pl_pocet_hp}")
     
     st.write("#### TNM Classification")
@@ -70,7 +95,7 @@ def risk_assessment_page():
     with col1:
         t_useless = st.selectbox("T", ['0','1','1a','1a2','1b','1c','1m','2','2a', '2b', '2c', '3', '3b','4','4a','4b','4c','4d','X','a','is','isD','isL','isP'], index=1)
     with col2:
-        tnm_klasifikace_n_kod = st.selectbox("N", ['0', '1', '1a', '1b', '1c', '1m', '2', '2a', '2b', '2c', '3', '3a', '3b', '3c', 'X'], index=0)
+        tnm_klasifikace_n_kod = st.selectbox("N", ['0', '1', '1a', '1b', '1c', '1m', '2', '2a', '2b', '2c', '3', '3a', '3b', '3c', 'X'], index=1)
     with col3:
         m_useless = st.selectbox("M", ['0', '1', '1d', 'X'], index=0)
 
@@ -96,16 +121,16 @@ def risk_assessment_page():
         
         with pcol1:
             pl_vysetreni_CT = st.checkbox(label="CT", value=False, key="primary_CT")
-            pl_vysetreni_MAMO = st.checkbox("MAMO", value=False, key="primary_MAMO")
+            pl_vysetreni_MAMO = st.checkbox("MAMO", value=True, key="primary_MAMO")
             pl_vysetreni_MRI = st.checkbox("MRI", value=False, key="primary_MRI")
         with pcol2:
             pl_vysetreni_PET_CT = st.checkbox("PET-CT", value=False, key="primary_PET_CT")
             pl_vysetreni_RTG = st.checkbox("RTG", value=False, key="primary_RTG")
-            pl_vysetreni_SCINT = st.checkbox("SCINT", value=False, key="primary_SCINT")
+            pl_vysetreni_SCINT = st.checkbox("SCINT", value=True, key="primary_SCINT")
         with pcol3:
             pl_vysetreni_SONO = st.checkbox("SONO", value=False, key="primary_SONO")
             pl_vysetreni_SPECT = st.checkbox("SPECT", value=False, key="primary_SPECT")
-            pl_vysetreni_OTHER = st.checkbox("OTHER", value=False, key="primary_OTHER")
+            pl_vysetreni_OTHER = st.checkbox("OTHER", value=True, key="primary_OTHER")
 
     with col2:
         # Post-therapy section
@@ -120,14 +145,14 @@ def risk_assessment_page():
         with pdcol1:
             pd_vysetreni_CT = st.checkbox(label="CT", value=False, key="post_CT")
             pd_vysetreni_MAMO = st.checkbox("MAMO", value=False, key="post_MAMO")
-            pd_vysetreni_MRI = st.checkbox("MRI", value=False, key="post_MRI")
+            pd_vysetreni_MRI = st.checkbox("MRI", value=True, key="post_MRI")
         with pdcol2:
             pd_vysetreni_PET_CT = st.checkbox("PET-CT", value=False, key="post_PET_CT")
             pd_vysetreni_RTG = st.checkbox("RTG", value=False, key="post_RTG")
             pd_vysetreni_SCINT = st.checkbox("SCINT", value=False, key="post_SCINT")
         with pdcol3:
             pd_vysetreni_SONO = st.checkbox("SONO", value=False, key="post_SONO")
-            pd_vysetreni_SPECT = st.checkbox("SPECT", value=False, key="post_SPECT")
+            pd_vysetreni_SPECT = st.checkbox("SPECT", value=True, key="post_SPECT")
             pd_vysetreni_OTHER = st.checkbox("OTHER", value=False, key="post_OTHER")
 
 
@@ -151,12 +176,12 @@ def risk_assessment_page():
         "09-I09-02",
         "09-I09-03",
         'OTHER'
-    ], format_func=lambda x: pl_hp_drg_posledni_dict.get(x, x), index=0)
+    ], format_func=lambda x: pl_hp_drg_posledni_dict.get(x, x), index=4)
 
     print(f"Selected last hospitalization reason: {pl_hp_drg_posledni}")
 
     st.write("#### All kinds of therapy")
-    st.write("In order select the type of therapy that was performed")
+    st.write("Please select the types of primary therapy in the order they were performed")
 
     # "pl_typ_lecby_1" ['C', 'H', 'I', 'O', 'R', 'T']
     # Terapie všeho druhu in english: "All kinds of therapy"
@@ -172,7 +197,7 @@ def risk_assessment_page():
 
     pl_typy_lecby = st.multiselect("", options=[
         'C', 'H', 'I', 'O', 'R', 'T'
-    ], format_func=lambda x: pl_typy_lecby_dict.get(x, x))
+    ], format_func=lambda x: pl_typy_lecby_dict.get(x, x), default=['C', 'H', 'R'])
 
     if pl_typy_lecby != []:
         pl_typ_lecby_1 = pl_typy_lecby[0]
@@ -242,48 +267,40 @@ def risk_assessment_page():
 
     print(f"Row to predict after conversion: {row_to_predict}")
 
-    print(model.predict_proba(row_to_predict))
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-    # Advanced settings
-    if st.button("Advanced Settings"):
-        st.write("Additional settings can go here.")
-
+ 
     # Main content
     st.write("## Risk Assessment Tool")
     st.write("Adjust the settings in the sidebar and click 'Predict Recurrence' to see the results.")
 
     # Predict button
     if st.button("Predict Recurrence"):
-        st.write("### Prediction Results")
+        result = model.predict(row_to_predict)
+        st.write(f"##### Your recurrence risk is: {100* result[0]:.2f}%")
+        explanation = explainer(row_to_predict)  # data je jeden radek
+        shap.force_plot(
+            -0.25815062496723745,
+            explanation[0].values,
+            features=row_to_predict.values[0],
+            feature_names=list(row_to_predict.columns),
+            show=False,
+            link="logit",
+            matplotlib=True,
+            text_rotation = 45,
+        )
 
-        # Example SHAP plot
-        shap_data = pd.DataFrame({"Feature": ["Age", "Tumor Size", "Grade"], "Importance": [0.4, 0.35, 0.25]})
-        fig = px.bar(shap_data, x="Importance", y="Feature", orientation="h", title="SHAP Feature Importance")
-        st.plotly_chart(fig)
+        fig = plt.gcf()
 
-        # Example wider plot
-        x = np.linspace(0, 10, 100)
-        y = np.sin(x)
-        fig = px.line(x=x, y=y, title="Example Wider Plot")
-        st.plotly_chart(fig, use_container_width=True)
+        st.pyplot(fig, use_container_width=True)
+
+        # st.write("### Prediction Results")
+
+        # # Example SHAP plot
+        # shap_data = pd.DataFrame({"Feature": ["Age", "Tumor Size", "Grade"], "Importance": [0.4, 0.35, 0.25]})
+        # fig = px.bar(shap_data, x="Importance", y="Feature", orientation="h", title="SHAP Feature Importance")
+        # st.plotly_chart(fig)
+
+        # # Example wider plot
+        # x = np.linspace(0, 10, 100)
+        # y = np.sin(x)
+        # fig = px.line(x=x, y=y, title="Example Wider Plot")
+        # st.plotly_chart(fig, use_container_width=True)
