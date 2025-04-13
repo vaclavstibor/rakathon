@@ -44,7 +44,9 @@ def home_page():
         """)
 
     with col2:
-        st.image("https://img.freepik.com/free-vector/breast-cancer-awareness-ribbon_23-2147877335.jpg", use_column_width=True)
+        #st.image("https://img.freepik.com/free-vector/breast-cancer-awareness-ribbon_23-2147877335.jpg", use_column_width=True)
+        st.markdown("")
+
 
     st.markdown("---")
 
