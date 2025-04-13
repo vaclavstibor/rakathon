@@ -1,0 +1,12 @@
+# Updated requirements for compatibility with Docker
+matplotlib
+numpy
+pandas
+streamlit
+lightgbm==4.5.0
+streamlit-extras
+streamlit-navigation-bar
+plotly
+seaborn
+htbuilder
+python-dateutil
