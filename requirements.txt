@@ -10,3 +10,4 @@ plotly
 seaborn
 htbuilder
 python-dateutil
+shap
