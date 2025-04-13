@@ -11,7 +11,7 @@ import seaborn as sns
 import plotly.express as px
 import plotly.graph_objects as go
 
-from pages.risk_assessment import risk_assessment_page
+from risk_assessment import risk_assessment_page
 
 import pickle
 
