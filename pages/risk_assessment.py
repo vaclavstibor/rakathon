@@ -6,6 +6,17 @@ import pickle
 import os    
 
 
+def load_model():
+    """
+    Load the pre-trained model from a pickle file.
+    """
+    model_path = os.path.join("model", "model_lgbm_rekurze.model")
+    with open(model_path, 'rb') as file:
+        model = pickle.load(file)
+    return model
+
+model = load_model()
+
 def risk_assessment_page():
     st.title("Risk Assessment Settings")
 

@@ -11,13 +11,6 @@ import seaborn as sns
 import plotly.express as px
 import plotly.graph_objects as go
 
-# Importo i moduli custom presenti nella cartella "Functions" e il modello di rete neurale nella cartella "Model"
-# In alternativa, lasciarli nella stessa cartella di questo file .py e chiamarli con from name_module import * 
-from model import NeuralNetwork                                                                                        # Modello Neural Network
-from functions import remove_missing, feature_selection, imputation_process, missing_target, categoric_to_numeric      # Pulizia e trasformazione dataset
-from functions import custom_split, standardize_x_train, target_transformation, nn_builder, metrics_plot               # Training, Finalizzazione, e Pipeline
-from functions import model_finalization, test_pipeline                                                                # Finalizzazione e Pipeline
-from functions import footer                                                                                           # Footer
 from pages.risk_assessment import risk_assessment_page
 
 import pickle
@@ -86,11 +79,6 @@ def main():
         risk_assessment_page()
 
 if __name__ == "__main__":
-    import joblib
-    from lightgbm import Booster
-
-    # Load the portable model
-    model_dict = joblib.load('model/portable_model.joblib')
-    model = Booster(model_str=model_dict['model_str'])
+    main()  
 
 
