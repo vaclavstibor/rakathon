@@ -126,8 +126,7 @@ def risk_assessment_page():
     # Number of hospitalizations during primary therapy 
 #    st.write("#### Number of Hospitalizations During Primary Therapy")
     st.markdown(
-        "#### Number of Hospitalizations During Primary Therapy", 
-        help="Select the number of hospitalizations during primary therapy."
+        "#### Number of Hospitalizations During Primary Therapy"
     )
 
 #   st.write("Select the number of hospitalizations during primary therapy")
