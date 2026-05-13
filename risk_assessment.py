@@ -4,8 +4,8 @@ import numpy as np
 import pandas as pd
 import pickle
 import os    
-import shap
 import matplotlib.pyplot as plt
+import shap
 
 def load_model():
     """
@@ -23,6 +23,32 @@ model = load_model()
 explainer = shap.TreeExplainer(model)
 
 def risk_assessment_page():
+    st.markdown(
+        """
+        <style>
+        .block-container {
+            padding-top: 1rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            max-width: 760px;
+        }
+        @media (max-width: 768px) {
+            .block-container {
+                padding-top: 0.75rem;
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+        }
+        div[data-baseweb="select"] > div,
+        div[data-baseweb="input"] > div,
+        div[data-baseweb="textarea"] > div {
+            min-height: 44px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
     # write the disclaimer in small font about the site needed to be used by doctors (of data science)
     st.markdown(
         """
@@ -33,14 +59,15 @@ def risk_assessment_page():
         }
         </style>
         <div class="disclaimer">
-            This tool is intended for use by doctors (of data science) only.
+            Breast Cancer Recurrence Prediction. This tool is intended for use by doctors (of data science) only.
         </div>
         """,
         unsafe_allow_html=True,
     )
     st.title("Risk Assessment Settings")
+    st.caption("Mobile-optimized form for quick bedside data entry.")
 
-    # Sidebar controls
+    # Controls
     age = st.slider("Select Age", 20, 90, 45)
     
     def age_normalization(age):
@@ -91,12 +118,12 @@ def risk_assessment_page():
     print(f"Selected number of hospitalizations: {pl_pocet_hp}")
     
     st.write("#### TNM Classification")
-    col1, col2, col3 = st.columns(3)
-    with col1:
+    t_col, n_col, m_col = st.columns(3)
+    with t_col:
         t_useless = st.selectbox("T", ['0','1','1a','1a2','1b','1c','1m','2','2a', '2b', '2c', '3', '3b','4','4a','4b','4c','4d','X','a','is','isD','isL','isP'], index=1)
-    with col2:
+    with n_col:
         tnm_klasifikace_n_kod = st.selectbox("N", ['0', '1', '1a', '1b', '1c', '1m', '2', '2a', '2b', '2c', '3', '3a', '3b', '3c', 'X'], index=1)
-    with col3:
+    with m_col:
         m_useless = st.selectbox("M", ['0', '1', '1d', 'X'], index=0)
 
     # Create one-hot encoding for n_classification ['0', '1', '1a', '1b', '1c', '1m', '2', '2a', '3a', 'X']
@@ -107,53 +134,37 @@ def risk_assessment_page():
     print(f"Selected N classification: {tnm_klasifikace_n_kod}")
     # print(f"One-hot encoding: {tnm_klasifikace_n_kod}")
 
-    # Create two main columns
-    col1, col2 = st.columns(2)
+    # Primary diagnosis section
+    st.subheader("Primary Diagnosis Examinations")
+    st.write("Select the examinations that were performed at diagnosis.")
+    pcol1, pcol2 = st.columns(2)
+    with pcol1:
+        pl_vysetreni_CT = st.checkbox(label="CT", value=False, key="primary_CT")
+        pl_vysetreni_MAMO = st.checkbox("MAMO", value=True, key="primary_MAMO")
+        pl_vysetreni_MRI = st.checkbox("MRI", value=False, key="primary_MRI")
+        pl_vysetreni_PET_CT = st.checkbox("PET-CT", value=False, key="primary_PET_CT")
+        pl_vysetreni_RTG = st.checkbox("RTG", value=False, key="primary_RTG")
+    with pcol2:
+        pl_vysetreni_SCINT = st.checkbox("SCINT", value=True, key="primary_SCINT")
+        pl_vysetreni_SONO = st.checkbox("SONO", value=False, key="primary_SONO")
+        pl_vysetreni_SPECT = st.checkbox("SPECT", value=False, key="primary_SPECT")
+        pl_vysetreni_OTHER = st.checkbox("OTHER", value=True, key="primary_OTHER")
 
-    with col1:
-        # Primary diagnosis section
-        st.subheader("Primary Diagnosis Examinations")
-        st.write("Select the examinations that were performed at the time of diagnosis")
-        # Use a container to group examinations
-        primary_container = st.container()
-        # Create three equal parts within this container
-        pcol1, pcol2, pcol3 = primary_container.columns(3)
-        
-        with pcol1:
-            pl_vysetreni_CT = st.checkbox(label="CT", value=False, key="primary_CT")
-            pl_vysetreni_MAMO = st.checkbox("MAMO", value=True, key="primary_MAMO")
-            pl_vysetreni_MRI = st.checkbox("MRI", value=False, key="primary_MRI")
-        with pcol2:
-            pl_vysetreni_PET_CT = st.checkbox("PET-CT", value=False, key="primary_PET_CT")
-            pl_vysetreni_RTG = st.checkbox("RTG", value=False, key="primary_RTG")
-            pl_vysetreni_SCINT = st.checkbox("SCINT", value=True, key="primary_SCINT")
-        with pcol3:
-            pl_vysetreni_SONO = st.checkbox("SONO", value=False, key="primary_SONO")
-            pl_vysetreni_SPECT = st.checkbox("SPECT", value=False, key="primary_SPECT")
-            pl_vysetreni_OTHER = st.checkbox("OTHER", value=True, key="primary_OTHER")
-
-    with col2:
-        # Post-therapy section
-        st.subheader("Post-Therapy Examinations")
-        st.write("Select the examinations that were performed after diagnosis:")
-        
-        # Use a container for post-diagnosis
-        post_container = st.container()
-        # Create three equal parts
-        pdcol1, pdcol2, pdcol3 = post_container.columns(3)
-        
-        with pdcol1:
-            pd_vysetreni_CT = st.checkbox(label="CT", value=False, key="post_CT")
-            pd_vysetreni_MAMO = st.checkbox("MAMO", value=False, key="post_MAMO")
-            pd_vysetreni_MRI = st.checkbox("MRI", value=True, key="post_MRI")
-        with pdcol2:
-            pd_vysetreni_PET_CT = st.checkbox("PET-CT", value=False, key="post_PET_CT")
-            pd_vysetreni_RTG = st.checkbox("RTG", value=False, key="post_RTG")
-            pd_vysetreni_SCINT = st.checkbox("SCINT", value=False, key="post_SCINT")
-        with pdcol3:
-            pd_vysetreni_SONO = st.checkbox("SONO", value=False, key="post_SONO")
-            pd_vysetreni_SPECT = st.checkbox("SPECT", value=True, key="post_SPECT")
-            pd_vysetreni_OTHER = st.checkbox("OTHER", value=False, key="post_OTHER")
+    # Post-therapy section
+    st.subheader("Post-Therapy Examinations")
+    st.write("Select the examinations that were performed after diagnosis.")
+    pdcol1, pdcol2 = st.columns(2)
+    with pdcol1:
+        pd_vysetreni_CT = st.checkbox(label="CT", value=False, key="post_CT")
+        pd_vysetreni_MAMO = st.checkbox("MAMO", value=False, key="post_MAMO")
+        pd_vysetreni_MRI = st.checkbox("MRI", value=True, key="post_MRI")
+        pd_vysetreni_PET_CT = st.checkbox("PET-CT", value=False, key="post_PET_CT")
+        pd_vysetreni_RTG = st.checkbox("RTG", value=False, key="post_RTG")
+    with pdcol2:
+        pd_vysetreni_SCINT = st.checkbox("SCINT", value=False, key="post_SCINT")
+        pd_vysetreni_SONO = st.checkbox("SONO", value=False, key="post_SONO")
+        pd_vysetreni_SPECT = st.checkbox("SPECT", value=True, key="post_SPECT")
+        pd_vysetreni_OTHER = st.checkbox("OTHER", value=False, key="post_OTHER")
 
 
     st.write("#### Last Hospitalization Reason During Primary Therapy")
@@ -270,7 +281,7 @@ def risk_assessment_page():
  
     # Main content
     st.write("## Risk Assessment Tool")
-    st.write("Adjust the settings in the sidebar and click 'Predict Recurrence' to see the results.")
+    st.write("Review your selections and tap predict to calculate recurrence risk.")
 
     # Predict button
     if st.button("Predict Recurrence"):
@@ -289,7 +300,6 @@ def risk_assessment_page():
         )
 
         fig = plt.gcf()
-
         st.pyplot(fig, use_container_width=True)
 
         # st.write("### Prediction Results")
