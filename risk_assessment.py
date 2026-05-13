@@ -136,11 +136,11 @@ def risk_assessment_page():
     pl_pocet_hp = st.number_input("Number of hospitalizations", min_value=0, max_value=50, value=3, step=1)
     print(f"Selected number of hospitalizations: {pl_pocet_hp}")
     
-    t_col, n_col, m_col = st.columns(3, gap="small")
     st.markdown(
         "#### TNM Classification", 
         help="Select the TNM classification of the tumor."
-    )
+    )    
+    t_col, n_col, m_col = st.columns(3, gap="small")
     with t_col:
         st.markdown("**T**")
         t_useless = st.selectbox(
