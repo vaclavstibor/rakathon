@@ -24,8 +24,8 @@ explainer = shap.TreeExplainer(model)
 
 def risk_assessment_page():
 
-    st.title("Breast Cancer Recurrence Prediction")
     st.caption("Risk Assessment Settings: This tool is intended for use by doctors (of data science) only.")
+    st.title("Breast Cancer Recurrence Prediction", width="stretch")
 
     # Controls
     age = st.slider("Select Age", 20, 90, 45)
