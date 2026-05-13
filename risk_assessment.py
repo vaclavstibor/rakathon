@@ -51,6 +51,15 @@ def risk_assessment_page():
             padding-top: 0.1rem;
             padding-bottom: 0.1rem;
         }
+        /* Keep TNM columns side-by-side even on phones */
+        div[data-testid="stHorizontalBlock"] {
+            flex-wrap: nowrap !important;
+            gap: 0.4rem !important;
+        }
+        div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+            min-width: 0 !important;
+            flex: 1 1 0 !important;
+        }
         </style>
         <div class="app-header">
             <h1>Breast Cancer Recurrence Prediction</h1>
