@@ -64,7 +64,7 @@ def risk_assessment_page():
     st.markdown(
         "#### Age", 
     )    
-    age = st.slider("Age", 20, 90, 45)
+    age = st.slider("Select your current age", 20, 90, 45)
     
     def age_normalization(age):
         """
