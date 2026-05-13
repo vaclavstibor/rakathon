@@ -23,12 +23,46 @@ model = load_model()
 explainer = shap.TreeExplainer(model)
 
 def risk_assessment_page():
-
-    st.caption("Risk Assessment Settings: This tool is intended for use by doctors (of data science) only.")
-    st.title("Breast Cancer Recurrence Prediction", width="stretch")
+    st.markdown(
+        """
+        <style>
+        .block-container {
+            padding-top: 0.75rem;
+        }
+        .app-header {
+            margin-bottom: 0.5rem;
+        }
+        .app-header h1 {
+            margin: 0 0 0.2rem 0;
+            line-height: 1.15;
+            font-size: clamp(1.45rem, 5.5vw, 2.1rem);
+        }
+        .app-header p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        div[data-baseweb="tag"] {
+            min-height: 2rem;
+        }
+        div[data-testid="stCheckbox"] label {
+            padding-top: 0.1rem;
+            padding-bottom: 0.1rem;
+        }
+        </style>
+        <div class="app-header">
+            <h1>Breast Cancer Recurrence Prediction</h1>
+            <p>Risk Assessment Settings: This tool is intended for use by doctors (of data science) only.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     # Controls
-    age = st.slider("Select Age", 20, 90, 45)
+    st.markdown(
+        "#### Age", 
+    )    
+    age = st.slider(20, 90, 45)
     
     def age_normalization(age):
         """
@@ -94,37 +128,33 @@ def risk_assessment_page():
     print(f"Selected N classification: {tnm_klasifikace_n_kod}")
     # print(f"One-hot encoding: {tnm_klasifikace_n_kod}")
 
+    exam_options = ["CT", "MAMO", "MRI", "PET-CT", "RTG", "SCINT", "SONO", "SPECT", "OTHER"]
+
     # Primary diagnosis section
     st.subheader("Primary Diagnosis Examinations")
-    st.write("Select the examinations that were performed at diagnosis.")
-    pcol1, pcol2 = st.columns(2)
-    with pcol1:
-        pl_vysetreni_CT = st.checkbox(label="CT", value=False, key="primary_CT")
-        pl_vysetreni_MAMO = st.checkbox("MAMO", value=True, key="primary_MAMO")
-        pl_vysetreni_MRI = st.checkbox("MRI", value=False, key="primary_MRI")
-        pl_vysetreni_PET_CT = st.checkbox("PET-CT", value=False, key="primary_PET_CT")
-        pl_vysetreni_RTG = st.checkbox("RTG", value=False, key="primary_RTG")
-    with pcol2:
-        pl_vysetreni_SCINT = st.checkbox("SCINT", value=True, key="primary_SCINT")
-        pl_vysetreni_SONO = st.checkbox("SONO", value=False, key="primary_SONO")
-        pl_vysetreni_SPECT = st.checkbox("SPECT", value=False, key="primary_SPECT")
-        pl_vysetreni_OTHER = st.checkbox("OTHER", value=True, key="primary_OTHER")
+    st.write("Select all examinations performed at diagnosis.")
+    primary_exams = st.multiselect(
+        "Primary diagnosis examinations",
+        options=exam_options,
+        default=["MAMO", "SCINT", "OTHER"],
+        label_visibility="collapsed",
+        key="primary_exams_multiselect",
+    )
+    pl_vysetreni_MAMO = "MAMO" in primary_exams
+    pl_vysetreni_SCINT = "SCINT" in primary_exams
+    pl_vysetreni_OTHER = "OTHER" in primary_exams
 
     # Post-therapy section
     st.subheader("Post-Therapy Examinations")
-    st.write("Select the examinations that were performed after diagnosis.")
-    pdcol1, pdcol2 = st.columns(2)
-    with pdcol1:
-        pd_vysetreni_CT = st.checkbox(label="CT", value=False, key="post_CT")
-        pd_vysetreni_MAMO = st.checkbox("MAMO", value=False, key="post_MAMO")
-        pd_vysetreni_MRI = st.checkbox("MRI", value=True, key="post_MRI")
-        pd_vysetreni_PET_CT = st.checkbox("PET-CT", value=False, key="post_PET_CT")
-        pd_vysetreni_RTG = st.checkbox("RTG", value=False, key="post_RTG")
-    with pdcol2:
-        pd_vysetreni_SCINT = st.checkbox("SCINT", value=False, key="post_SCINT")
-        pd_vysetreni_SONO = st.checkbox("SONO", value=False, key="post_SONO")
-        pd_vysetreni_SPECT = st.checkbox("SPECT", value=True, key="post_SPECT")
-        pd_vysetreni_OTHER = st.checkbox("OTHER", value=False, key="post_OTHER")
+    st.write("Select all examinations performed after diagnosis.")
+    post_exams = st.multiselect(
+        "Post-therapy examinations",
+        options=exam_options,
+        default=["MRI", "SPECT"],
+        label_visibility="collapsed",
+        key="post_exams_multiselect",
+    )
+    pd_vysetreni_SPECT = "SPECT" in post_exams
 
 
     st.write("#### Last Hospitalization Reason During Primary Therapy")
