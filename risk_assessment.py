@@ -4,8 +4,8 @@ import numpy as np
 import pandas as pd
 import pickle
 import os    
-import matplotlib.pyplot as plt
 import shap
+import matplotlib.pyplot as plt
 
 def load_model():
     """
@@ -23,49 +23,9 @@ model = load_model()
 explainer = shap.TreeExplainer(model)
 
 def risk_assessment_page():
-    st.markdown(
-        """
-        <style>
-        .block-container {
-            padding-top: 1rem;
-            padding-left: 1rem;
-            padding-right: 1rem;
-            max-width: 760px;
-        }
-        @media (max-width: 768px) {
-            .block-container {
-                padding-top: 0.75rem;
-                padding-left: 0.75rem;
-                padding-right: 0.75rem;
-            }
-        }
-        div[data-baseweb="select"] > div,
-        div[data-baseweb="input"] > div,
-        div[data-baseweb="textarea"] > div {
-            min-height: 44px;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
 
-    # write the disclaimer in small font about the site needed to be used by doctors (of data science)
-    st.markdown(
-        """
-        <style>
-        .disclaimer {
-            font-size: 1.2em;
-            color: gray;
-        }
-        </style>
-        <div class="disclaimer">
-            Breast Cancer Recurrence Prediction. This tool is intended for use by doctors (of data science) only.
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-    st.title("Risk Assessment Settings")
-    st.caption("Mobile-optimized form for quick bedside data entry.")
+    st.title("Breast Cancer Recurrence Prediction")
+    st.caption("Risk Assessment Settings: This tool is intended for use by doctors (of data science) only.")
 
     # Controls
     age = st.slider("Select Age", 20, 90, 45)
