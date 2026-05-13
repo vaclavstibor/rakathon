@@ -44,22 +44,6 @@ def risk_assessment_page():
             font-size: 0.9rem;
             color: #6b7280;
         }
-        .tnm-label {
-            font-weight: 700;
-            margin: 0.35rem 0 0 0;
-            line-height: 1.2;
-        }
-        div[data-testid="stSelectbox"] {
-            margin-bottom: 0.35rem;
-        }
-        @media (max-width: 640px) {
-            div[data-testid="stHorizontalBlock"] {
-                gap: 0.35rem;
-            }
-            div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
-                min-width: 0 !important;
-            }
-        }
         div[data-baseweb="tag"] {
             min-height: 2rem;
         }
@@ -70,7 +54,7 @@ def risk_assessment_page():
         </style>
         <div class="app-header">
             <h1>Breast Cancer Recurrence Prediction</h1>
-            <p>Risk Assessment Settings: This tool is intended for use by doctors (of data science) only.</p>
+            <p>Risk Assessment Settings -- this tool is intended for use by doctors (of data science) only.</p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -130,32 +114,25 @@ def risk_assessment_page():
     print(f"Selected number of hospitalizations: {pl_pocet_hp}")
     
     st.write("#### TNM Classification")
-    t_label_col, t_select_col = st.columns([0.55, 6.45], gap="small")
-    with t_label_col:
-        st.markdown('<p class="tnm-label">T</p>', unsafe_allow_html=True)
-    with t_select_col:
+    t_col, n_col, m_col = st.columns(3, gap="small")
+    with t_col:
+        st.markdown("**T**")
         t_useless = st.selectbox(
             "T selector",
             ['0','1','1a','1a2','1b','1c','1m','2','2a', '2b', '2c', '3', '3b','4','4a','4b','4c','4d','X','a','is','isD','isL','isP'],
             index=1,
             label_visibility="collapsed",
         )
-
-    n_label_col, n_select_col = st.columns([0.55, 6.45], gap="small")
-    with n_label_col:
-        st.markdown('<p class="tnm-label">N</p>', unsafe_allow_html=True)
-    with n_select_col:
+    with n_col:
+        st.markdown("**N**")
         tnm_klasifikace_n_kod = st.selectbox(
             "N selector",
             ['0', '1', '1a', '1b', '1c', '1m', '2', '2a', '2b', '2c', '3', '3a', '3b', '3c', 'X'],
             index=1,
             label_visibility="collapsed",
         )
-
-    m_label_col, m_select_col = st.columns([0.55, 6.45], gap="small")
-    with m_label_col:
-        st.markdown('<p class="tnm-label">M</p>', unsafe_allow_html=True)
-    with m_select_col:
+    with m_col:
+        st.markdown("**M**")
         m_useless = st.selectbox(
             "M selector",
             ['0', '1', '1d', 'X'],
