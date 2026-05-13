@@ -36,7 +36,8 @@ def risk_assessment_page():
         .app-header h1 {
             margin: 0 0 0.2rem 0;
             line-height: 1.15;
-            font-size: clamp(1.45rem, 5.5vw, 2.1rem);
+            font-size: clamp(2rem, 7.2vw, 3rem);
+            font-weight: 800;
         }
         .app-header p {
             margin: 0;
