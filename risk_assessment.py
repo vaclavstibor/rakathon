@@ -114,13 +114,38 @@ def risk_assessment_page():
     print(f"Selected number of hospitalizations: {pl_pocet_hp}")
     
     st.write("#### TNM Classification")
-    t_col, n_col, m_col = st.columns(3)
-    with t_col:
-        t_useless = st.selectbox("T", ['0','1','1a','1a2','1b','1c','1m','2','2a', '2b', '2c', '3', '3b','4','4a','4b','4c','4d','X','a','is','isD','isL','isP'], index=1)
-    with n_col:
-        tnm_klasifikace_n_kod = st.selectbox("N", ['0', '1', '1a', '1b', '1c', '1m', '2', '2a', '2b', '2c', '3', '3a', '3b', '3c', 'X'], index=1)
-    with m_col:
-        m_useless = st.selectbox("M", ['0', '1', '1d', 'X'], index=0)
+    t_label_col, t_select_col = st.columns([1, 6])
+    with t_label_col:
+        st.markdown("**T**")
+    with t_select_col:
+        t_useless = st.selectbox(
+            "T selector",
+            ['0','1','1a','1a2','1b','1c','1m','2','2a', '2b', '2c', '3', '3b','4','4a','4b','4c','4d','X','a','is','isD','isL','isP'],
+            index=1,
+            label_visibility="collapsed",
+        )
+
+    n_label_col, n_select_col = st.columns([1, 6])
+    with n_label_col:
+        st.markdown("**N**")
+    with n_select_col:
+        tnm_klasifikace_n_kod = st.selectbox(
+            "N selector",
+            ['0', '1', '1a', '1b', '1c', '1m', '2', '2a', '2b', '2c', '3', '3a', '3b', '3c', 'X'],
+            index=1,
+            label_visibility="collapsed",
+        )
+
+    m_label_col, m_select_col = st.columns([1, 6])
+    with m_label_col:
+        st.markdown("**M**")
+    with m_select_col:
+        m_useless = st.selectbox(
+            "M selector",
+            ['0', '1', '1d', 'X'],
+            index=0,
+            label_visibility="collapsed",
+        )
 
     # Create one-hot encoding for n_classification ['0', '1', '1a', '1b', '1c', '1m', '2', '2a', '3a', 'X']
     n_categories = ['0', '1', '1a', '1b', '1c', '1m', '2', '2a', '3a', 'X']
