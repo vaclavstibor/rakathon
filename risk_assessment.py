@@ -136,8 +136,11 @@ def risk_assessment_page():
     pl_pocet_hp = st.number_input("Number of hospitalizations", min_value=0, max_value=50, value=3, step=1)
     print(f"Selected number of hospitalizations: {pl_pocet_hp}")
     
-    st.write("#### TNM Classification")
     t_col, n_col, m_col = st.columns(3, gap="small")
+    st.markdown(
+        "#### TNM Classification", 
+        help="Select the TNM classification of the tumor."
+    )
     with t_col:
         st.markdown("**T**")
         t_useless = st.selectbox(
@@ -317,7 +320,7 @@ def risk_assessment_page():
     st.write("Review your selections and tap predict to calculate recurrence risk.")
 
     # Predict button
-    if st.button("Predict Recurrence"):
+    if st.button("Predict Recurrence", type="primary", use_container_width=True):
         result = model.predict(row_to_predict)
         st.write(f"##### Your recurrence risk is: {100* result[0]:.2f}%")
         explanation = explainer(row_to_predict)  # data je jeden radek
