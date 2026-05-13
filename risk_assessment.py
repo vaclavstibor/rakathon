@@ -171,13 +171,13 @@ def risk_assessment_page():
     }
 
 
-    pl_hp_drg_posledni = st.selectbox("", options=[
+    pl_hp_drg_posledni = st.selectbox("Last hospitalization reason", options=[
         "09-I06-04",
         "09-I06-05",
         "09-I09-02",
         "09-I09-03",
         'OTHER'
-    ], format_func=lambda x: pl_hp_drg_posledni_dict.get(x, x), index=4)
+    ], format_func=lambda x: pl_hp_drg_posledni_dict.get(x, x), index=4, label_visibility="collapsed")
 
     print(f"Selected last hospitalization reason: {pl_hp_drg_posledni}")
 
@@ -196,9 +196,9 @@ def risk_assessment_page():
     }
 
 
-    pl_typy_lecby = st.multiselect("", options=[
+    pl_typy_lecby = st.multiselect("All kinds of therapy", options=[
         'C', 'H', 'I', 'O', 'R', 'T'
-    ], format_func=lambda x: pl_typy_lecby_dict.get(x, x), default=['C', 'H', 'R'])
+    ], format_func=lambda x: pl_typy_lecby_dict.get(x, x), default=['C', 'H', 'R'], label_visibility="collapsed")
 
     if pl_typy_lecby != []:
         pl_typ_lecby_1 = pl_typy_lecby[0]
