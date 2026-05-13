@@ -27,7 +27,8 @@ def risk_assessment_page():
         """
         <style>
         .block-container {
-            padding-top: 0.75rem;
+            /* Keep content below Streamlit top bar */
+            padding-top: calc(3.25rem + env(safe-area-inset-top, 0px));
         }
         .app-header {
             margin-bottom: 0.5rem;
