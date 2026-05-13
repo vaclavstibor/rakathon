@@ -44,6 +44,22 @@ def risk_assessment_page():
             font-size: 0.9rem;
             color: #6b7280;
         }
+        .tnm-label {
+            font-weight: 700;
+            margin: 0.35rem 0 0 0;
+            line-height: 1.2;
+        }
+        div[data-testid="stSelectbox"] {
+            margin-bottom: 0.35rem;
+        }
+        @media (max-width: 640px) {
+            div[data-testid="stHorizontalBlock"] {
+                gap: 0.35rem;
+            }
+            div[data-testid="stHorizontalBlock"] > div[data-testid="column"] {
+                min-width: 0 !important;
+            }
+        }
         div[data-baseweb="tag"] {
             min-height: 2rem;
         }
@@ -114,9 +130,9 @@ def risk_assessment_page():
     print(f"Selected number of hospitalizations: {pl_pocet_hp}")
     
     st.write("#### TNM Classification")
-    t_label_col, t_select_col = st.columns([1, 6])
+    t_label_col, t_select_col = st.columns([0.55, 6.45], gap="small")
     with t_label_col:
-        st.markdown("**T**")
+        st.markdown('<p class="tnm-label">T</p>', unsafe_allow_html=True)
     with t_select_col:
         t_useless = st.selectbox(
             "T selector",
@@ -125,9 +141,9 @@ def risk_assessment_page():
             label_visibility="collapsed",
         )
 
-    n_label_col, n_select_col = st.columns([1, 6])
+    n_label_col, n_select_col = st.columns([0.55, 6.45], gap="small")
     with n_label_col:
-        st.markdown("**N**")
+        st.markdown('<p class="tnm-label">N</p>', unsafe_allow_html=True)
     with n_select_col:
         tnm_klasifikace_n_kod = st.selectbox(
             "N selector",
@@ -136,9 +152,9 @@ def risk_assessment_page():
             label_visibility="collapsed",
         )
 
-    m_label_col, m_select_col = st.columns([1, 6])
+    m_label_col, m_select_col = st.columns([0.55, 6.45], gap="small")
     with m_label_col:
-        st.markdown("**M**")
+        st.markdown('<p class="tnm-label">M</p>', unsafe_allow_html=True)
     with m_select_col:
         m_useless = st.selectbox(
             "M selector",
