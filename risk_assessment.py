@@ -77,7 +77,7 @@ def risk_assessment_page():
         </style>
         <div class="app-header">
             <h1>Breast Cancer Recurrence Prediction</h1>
-            <p>Risk Assessment Settings -- this tool is intended for use by doctors (of data science) only.</p>
+            <p>Risk Assessment Settings: this tool is intended for use by doctors (of data science) only.</p>
         </div>
         """,
         unsafe_allow_html=True,
